@@ -5,7 +5,7 @@
   <!-- Declare the existence of a servlet. -->
   <servlet>
     <servlet-name>GitServlet</servlet-name>
-    <servlet-class>GitoriousServlet</servlet-class>
+    <servlet-class>org.gitorious.http.GitoriousServlet</servlet-class>
     <init-param>
       <param-name>base-path</param-name>
       <param-value>/tmp/</param-value>

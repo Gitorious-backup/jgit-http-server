@@ -1,3 +1,5 @@
+package org.gitorious.http;
+
 import org.eclipse.jgit.http.server.resolver.*;
 import javax.servlet.http.HttpServletRequest;
 
