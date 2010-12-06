@@ -1,3 +1,6 @@
+/*
+ * Extending JGit's GitServlet to use a custom repository resolver 
+ */
 package org.gitorious.http;
 import org.eclipse.jgit.http.server.*;
 
