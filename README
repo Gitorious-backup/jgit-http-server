@@ -1,0 +1,9 @@
+Gitorious HTTP server
+
+Running it:
+- Verify URL mappings in GitoriousResolver:
+  - URI: The base URI for your local Gitorious server
+  - BASE_DIR: The root for repositories on your Gitorious server
+- mvn install
+- mvn jetty:run
+- git clone http://localhost:8080/<project>/<repository>.git
