@@ -24,22 +24,30 @@ import java.io.*;
 
 
 class GitoriousResolver implements RepositoryResolver {
-    private static final String URL = "http://gitorious.here:3000/";
-    private static final String BASE_PATH="/opt/gitorious/repositories/";
+    private String repositoryRoot;
+    private String permissionBaseUri;
 
     public Repository open(HttpServletRequest req, String name)
         throws RepositoryNotFoundException, ServiceNotAuthorizedException, 
                ServiceNotEnabledException {
-        System.out.println("Looking for repository at " + name);
+        System.out.println("************ Looking for repository at " + name + "**************");
         String realName = lookupName(name);
         try {
-            File gitDir = new File(BASE_PATH, realName);
+            File gitDir = new File(repositoryRoot, realName);
             Repository db = RepositoryCache.open(FileKey.lenient(gitDir, FS.DETECTED), true);
             return db;
         } catch (IOException io) {
             System.err.println("ERROR: " + io.getMessage());
             throw new RepositoryNotFoundException(name);
         }
+    }
+
+    public void setRepositoryRoot(String repositoryRoot) {
+        this.repositoryRoot = repositoryRoot;
+    }
+
+    public void setPermissionBaseUri(String uri) {
+        this.permissionBaseUri = uri;
     }
 
     public String lookupName(String in){
@@ -49,7 +57,7 @@ class GitoriousResolver implements RepositoryResolver {
 
             // Should be /project/repository/config
 
-            String url = URL + path + "/config";
+            String url = permissionBaseUri + path + "/config";
 
             HttpGet httpGet = new HttpGet(url);
 
