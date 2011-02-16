@@ -77,5 +77,11 @@
       <artifactId>org.eclipse.jgit.http.server</artifactId>
       <version>0.9.3</version>
     </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>

@@ -21,23 +21,30 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 
 
 class GitoriousResolver implements RepositoryResolver {
     private String repositoryRoot;
     private String permissionBaseUri;
+    private static Logger logger = Logger.getLogger("org.gitorious");
+    static {
+        logger.setLevel(org.apache.log4j.Level.INFO);
+        BasicConfigurator.configure();
+    }
 
     public Repository open(HttpServletRequest req, String name)
         throws RepositoryNotFoundException, ServiceNotAuthorizedException, 
                ServiceNotEnabledException {
-        System.out.println("************ Looking for repository at " + name + "**************");
+        logger.info("************ Looking for repository at " + name + "**************");
         String realName = lookupName(name);
         try {
             File gitDir = new File(repositoryRoot, realName);
             Repository db = RepositoryCache.open(FileKey.lenient(gitDir, FS.DETECTED), true);
             return db;
         } catch (IOException io) {
-            System.err.println("ERROR: " + io.getMessage());
+            logger.error("ERROR: " + io.getMessage());
             throw new RepositoryNotFoundException(name);
         }
     }
@@ -80,9 +87,10 @@ class GitoriousResolver implements RepositoryResolver {
             
             is.close();
             String fullPath =  result;
-            System.out.println("Path is " + fullPath);
+            logger.info("Path is " + fullPath);
             return fullPath;
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return e.getMessage();
         }
     }
