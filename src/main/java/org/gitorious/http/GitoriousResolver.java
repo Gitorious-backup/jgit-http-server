@@ -40,6 +40,9 @@ class GitoriousResolver implements RepositoryResolver {
         throws RepositoryNotFoundException, ServiceNotAuthorizedException, 
                ServiceNotEnabledException {
         String realName = lookupName(name);
+        if (realName == null) {
+            throw new RepositoryNotFoundException(name);
+        }
         try {
             File gitDir = new File(repositoryRoot, realName);
             Repository db = RepositoryCache.open(FileKey.lenient(gitDir, FS.DETECTED), true);
@@ -106,7 +109,7 @@ class GitoriousResolver implements RepositoryResolver {
             return fullPath;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return e.getMessage();
+            return null;
         }
     }
 }
