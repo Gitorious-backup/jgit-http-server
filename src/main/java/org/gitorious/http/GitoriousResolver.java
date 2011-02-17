@@ -23,12 +23,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.BasicConfigurator;
+import java.util.HashMap;
 
 
 class GitoriousResolver implements RepositoryResolver {
     private String repositoryRoot;
     private String permissionBaseUri;
     private static Logger logger = Logger.getLogger("org.gitorious");
+    private static HashMap<String, String> repositoryMap = new HashMap<String,String>();
     static {
         logger.setLevel(org.apache.log4j.Level.INFO);
         BasicConfigurator.configure();
@@ -37,7 +39,6 @@ class GitoriousResolver implements RepositoryResolver {
     public Repository open(HttpServletRequest req, String name)
         throws RepositoryNotFoundException, ServiceNotAuthorizedException, 
                ServiceNotEnabledException {
-        logger.info("************ Looking for repository at " + name + "**************");
         String realName = lookupName(name);
         try {
             File gitDir = new File(repositoryRoot, realName);
@@ -57,7 +58,21 @@ class GitoriousResolver implements RepositoryResolver {
         this.permissionBaseUri = uri;
     }
 
+    private static void cacheUrl(String url, String path) {
+        logger.info("Caching " + url);
+        repositoryMap.put(url, path);
+    }
+
+    private static String loadFromCache(String url) {
+        return repositoryMap.get(url);
+    }
+
     public String lookupName(String in){
+        String cachedResult = loadFromCache(in);
+        if (cachedResult != null) {
+            logger.info("Found " + in + " in cache");
+            return cachedResult;
+        }
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             String path = in.split("\\.git")[0];
@@ -87,7 +102,7 @@ class GitoriousResolver implements RepositoryResolver {
             
             is.close();
             String fullPath =  result;
-            logger.info("Path is " + fullPath);
+            cacheUrl(in, fullPath);
             return fullPath;
         } catch (Exception e) {
             logger.error(e.getMessage());
