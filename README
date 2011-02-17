@@ -17,6 +17,7 @@ It supports pull only, ATM.
 
 Running it:
 -----------
+- Copy src/main/webapp/WEB-INF/web.xml.example to src/main/webapp/WEB-INF/web.xml
 - Verify URL mappings in GitoriousResolver (in src/main/webapp/WEB-INF/web.xml):
 
     <init-param>
