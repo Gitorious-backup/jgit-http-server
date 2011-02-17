@@ -10,7 +10,7 @@
       <param-name>base-path</param-name>
       <param-value>/tmp/</param-value>
     </init-param>
-g    <init-param>
+    <init-param>
       <param-name>export-all</param-name>
       <param-value>true</param-value>
     </init-param>
