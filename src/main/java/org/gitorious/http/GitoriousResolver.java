@@ -87,6 +87,12 @@ class GitoriousResolver implements RepositoryResolver {
             HttpGet httpGet = new HttpGet(url);
 
             HttpResponse response = client.execute(httpGet);
+
+            int responseCode = response.getStatusLine().getStatusCode();
+            if (responseCode != 200) {
+                return null;
+            }
+
             HttpEntity entity = response.getEntity();
             
             InputStream is = entity.getContent();

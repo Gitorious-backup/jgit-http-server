@@ -1,7 +1,7 @@
 Gitorious HTTP server
 =====================
 
-This package uses JGit's implementation of "smart" HTTP transport for
+This package uses JGit's [1] implementation of "smart" HTTP transport for
 Gitorious repositories. This will be *a lot* faster than the HTTP
 transport that ships with Gitorious, since it uses Git's pack files
 instead of walking individual commits. 
@@ -9,7 +9,8 @@ instead of walking individual commits.
 http://progit.org/2010/03/04/smart-http.html details the git part of this.
 
 This app itself does very little, except translate the incoming URL to
-a path in the file system. 
+a path in the file system. JGit is a truly awesome project, and does
+most of the heavy lifting for us.
 
 It supports pull only, ATM.
 
@@ -62,7 +63,7 @@ server to listen on port 80. If this is not an option, you may put
 this behind a proxy. Gitorious will, by default, interpret all
 requests to git.<gitorious_host> to be a Git-over-HTTP request. Taking
 advantage of this, you could set up varnish as such (in
-/etc/varnish/default.vcl):
+/etc/varnish/default.vcl), if you use Varnish [2]:
 
 backend default {
   .host = "127.0.0.1";
@@ -85,3 +86,7 @@ sub vcl_recv {
     # Defaults, uses the default backend
   } 
 }
+
+
+1: http://www.jgit.org/ Git, implemented in java
+2: http://www.varnish-cache.org/ Varnish cache
